@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('top-user-email').textContent = currentUser.email;
       document.getElementById('dash-anno').textContent = new Date().getFullYear();
       document.getElementById('n-date').value = new Date().toISOString().split('T')[0];
-      loadAll().then(function() { renderDashboard(); checkScadenze(); });
+      loadAll().then(function() { setTimeout(function() { renderDashboard(); checkScadenze(); }, 500); });
     }
   });
 
