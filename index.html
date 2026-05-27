@@ -1,6 +1,3 @@
-Perfetto! Incolla questa **PARTE 1**:
-
-```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -9,6 +6,7 @@ Perfetto! Incolla questa **PARTE 1**:
 <title>Studio Lentini — Gestionale</title>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
@@ -19,6 +17,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:12px;font-weight:600;color:#4a5568;margin-bottom:4px;text-transform:uppercase}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2b6cb0}
 .btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px}
 .btn-primary{background:#2b6cb0;color:white}
 .btn-primary:hover{background:#1a365d}
@@ -26,6 +25,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
 .btn-danger{background:#e53e3e;color:white;padding:6px 12px;width:auto;font-size:13px;border-radius:6px;border:none;cursor:pointer}
 .btn-sm{padding:6px 14px;width:auto;font-size:13px;border:none;border-radius:6px;cursor:pointer;background:#2b6cb0;color:white}
 .btn-warning{background:#dd6b20;color:white;padding:6px 12px;width:auto;font-size:13px;border-radius:6px;border:none;cursor:pointer;margin-right:4px}
+.btn-green{background:#38a169;color:white;padding:6px 12px;width:auto;font-size:13px;border-radius:6px;border:none;cursor:pointer;margin-right:4px}
 #app{display:none}
 .sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:#1a365d;color:white;padding:24px 0;z-index:100;overflow-y:auto}
 .sidebar-logo{padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:16px;font-weight:700}
@@ -62,8 +62,8 @@ tbody td{padding:10px 12px}
 .badge-yellow{background:#fefcbf;color:#744210}
 .badge-gray{background:#e2e8f0;color:#4a5568}
 .badge-red{background:#fed7d7;color:#742a2a}
-.badge-blue{background:#bee3f8;color:#1a365d}
-.filters{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.badge-orange{background:#feebc8;color:#744210}
+.filters{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
 .filters input,.filters select{padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;background:white}
 .msg{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px}
 .msg-success{background:#c6f6d5;color:#276749}
@@ -76,10 +76,14 @@ canvas{max-height:260px}
 .empty-state span{font-size:40px;display:block;margin-bottom:8px}
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.active{display:flex}
-.modal{background:white;border-radius:16px;padding:32px;width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.modal{background:white;border-radius:16px;padding:32px;width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
 .modal h3{font-size:18px;font-weight:700;color:#1a365d;margin-bottom:20px}
 .modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
-.section-divider{font-size:11px;font-weight:700;color:#90cdf4;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #e2e8f0}
+.section-divider{font-size:11px;font-weight:700;color:#2b6cb0;text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+.notifica-bar{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#856404;display:none}
+.notifica-bar.active{display:block}
+.scadenza-row-red td{background:#fff5f5!important;color:#742a2a}
+.scadenza-row-orange td{background:#fffaf0!important;color:#744210}
 </style>
 </head>
 <body>
@@ -88,8 +92,14 @@ canvas{max-height:260px}
     <h1>📊 Studio Lentini</h1>
     <p>Gestionale Consulente Finanziario</p>
     <div id="login-msg"></div>
-    <div class="form-group">abel>Email</label><input type="email" id="login-email" placeholder="tuaemail@esempio.it"/></div>
-    <div class="form-group">abel>Password</label><input type="password" id="login-pass" placeholder="••••••••"/></div>
+    <div class="form-group">
+      abel>Email</label>
+      <input type="email" id="login-email" placeholder="tuaemail@esempio.it"/>
+    </div>
+    <div class="form-group">
+      abel>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••"/>
+    </div>
     <button class="btn btn-primary" onclick="doLogin()">Accedi</button>
     <button class="btn btn-secondary" onclick="doRegister()">Crea account</button>
   </div>
@@ -104,6 +114,9 @@ canvas{max-height:260px}
     <div class="nav-item" onclick="showPage('movimenti',this)">📋 <span>Movimenti</span></div>
     <div class="nav-item" onclick="showPage('nuovo',this)">➕ <span>Nuovo movimento</span></div>
     <div class="nav-item" onclick="showPage('nuovo-cliente',this)">👤 <span>Nuovo cliente</span></div>
+    <div class="nav-section">Strumenti</div>
+    <div class="nav-item" onclick="showPage('scadenziario',this)">📅 <span>Scadenziario</span></div>
+    <div class="nav-item" onclick="showPage('statistiche',this)">📊 <span>Statistiche</span></div>
     <div class="nav-section">Report</div>
     <div class="nav-item" onclick="showPage('report',this)">📈 <span>Report annuale</span></div>
   </div>
@@ -112,8 +125,11 @@ canvas{max-height:260px}
       <div class="top-bar-user" id="top-user-email"></div>
       <button class="logout-btn" onclick="doLogout()">Esci</button>
     </div>
+
+    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="page-header"><h2>Dashboard</h2><p>Riepilogo — <span id="dash-anno"></span></p></div>
+      <div id="notifica-scadenze" class="notifica-bar"></div>
       <div class="kpi-grid" id="kpi-grid"></div>
       <div class="grid-2">
         <div class="card"><h3>Andamento mensile</h3>anvas id="chart-mensile"></canvas></div>
@@ -121,45 +137,82 @@ canvas{max-height:260px}
       </div>
       <div class="card"><h3>Ultimi 10 movimenti</h3><div id="dash-recent"></div></div>
     </div>
+
+    <!-- CLIENTI -->
     <div class="page" id="page-clienti">
       <div class="page-header"><h2>Clienti</h2><p>Anagrafica completa</p></div>
-      <div class="filters"><input type="text" id="search-clienti" placeholder="Cerca cliente..." oninput="renderClienti()"/></div>
+      <div class="filters">
+        <input type="text" id="search-clienti" placeholder="Cerca per nome, email, CF..." oninput="renderClienti()"/>
+      </div>
       <div class="card"><div id="table-clienti"></div></div>
     </div>
+
+    <!-- NUOVO CLIENTE -->
     <div class="page" id="page-nuovo-cliente">
       <div class="page-header"><h2>Nuovo Cliente</h2><p>Anagrafica completa</p></div>
-      <div class="card" style="max-width:600px">
+      <div class="card" style="max-width:620px">
         <div id="msg-cliente"></div>
         <div class="section-divider">Dati anagrafici</div>
         <div class="grid-2">
-          <div class="form-group">abel>Nome e Cognome *</label><input type="text" id="c-name"/></div>
-          <div class="form-group">abel>Email</label><input type="email" id="c-email"/></div>
+          <div class="form-group">
+            abel>Nome e Cognome *</label>
+            <input type="text" id="c-name"/>
+          </div>
+          <div class="form-group">
+            abel>Email</label>
+            <input type="email" id="c-email"/>
+          </div>
         </div>
         <div class="grid-2">
-          <div class="form-group">abel>Telefono</label><input type="text" id="c-phone"/></div>
-          <div class="form-group">abel>Codice Fiscale</label><input type="text" id="c-fiscal" style="text-transform:uppercase"/></div>
+          <div class="form-group">
+            abel>Telefono</label>
+            <input type="text" id="c-phone"/>
+          </div>
+          <div class="form-group">
+                        abel>Codice Fiscale</label>
+            <input type="text" id="c-fiscal" style="text-transform:uppercase"/>
+          </div>
         </div>
-        <div class="form-group">abel>Partita IVA</label><input type="text" id="c-vat"/></div>
+        <div class="form-group">
+          abel>Partita IVA</label>
+          <input type="text" id="c-vat"/>
+        </div>
         <div class="section-divider">Indirizzo</div>
-        <div class="form-group">abel>Indirizzo</label><input type="text" id="c-address" placeholder="Via, numero civico"/></div>
+        <div class="form-group">
+          abel>Indirizzo</label>
+          <input type="text" id="c-address" placeholder="Via, numero civico"/>
+        </div>
         <div class="grid-3">
-          <div class="form-group">abel>Città</label><input type="text" id="c-city"/></div>
-          <div class="form-group">abel>CAP</label><input type="text" id="c-zip"/></div>
-          <div class="form-group">abel>Provincia</label><input type="text" id="c-province" maxlength="2" style="text-transform:uppercase"/></div>
+          <div class="form-group">
+            abel>Città</label>
+            <input type="text" id="c-city"/>
+          </div>
+          <div class="form-group">
+            abel>CAP</label>
+            <input type="text" id="c-zip"/>
+          </div>
+          <div class="form-group">
+            abel>Provincia</label>
+            <input type="text" id="c-province" maxlength="2" style="text-transform:uppercase"/>
+          </div>
         </div>
         <div class="section-divider">Note</div>
-        <div class="form-group">abel>Note</label><textarea id="c-notes" rows="3"></textarea></div>
+        <div class="form-group">
+          abel>Note</label>
+          <textarea id="c-notes" rows="3"></textarea>
+        </div>
         <button class="btn btn-primary" onclick="saveCliente()">Salva cliente</button>
       </div>
     </div>
+
+    <!-- MOVIMENTI -->
     <div class="page" id="page-movimenti">
       <div class="page-header"><h2>Movimenti</h2><p>Parcelle e spese</p></div>
       <div class="filters">
         <input type="text" id="search-mov" placeholder="Cerca..." oninput="renderMovimenti()"/>
         <select id="filter-type" onchange="renderMovimenti()">
           <option value="">Tutti i tipi</option>
-          <option value
-            ="income">Parcelle</option>
+          <option value="income">Parcelle</option>
           <option value="expense">Spese</option>
         </select>
         <select id="filter-status" onchange="renderMovimenti()">
@@ -168,26 +221,37 @@ canvas{max-height:260px}
           <option value="pending">In attesa</option>
           <option value="draft">Bozza</option>
         </select>
-        <button class="btn-sm" onclick="exportCSV()">📥 Esporta CSV</button>
+        <button class="btn-sm" onclick="exportCSV()">📥 CSV</button>
       </div>
       <div class="card"><div id="table-movimenti"></div></div>
     </div>
+
+    <!-- NUOVO MOVIMENTO -->
     <div class="page" id="page-nuovo">
       <div class="page-header"><h2>Nuovo Movimento</h2></div>
       <div class="card" style="max-width:560px">
         <div id="msg-nuovo"></div>
-        <div class="form-group">abel>Tipo *</label>
+        <div class="form-group">
+          abel>Tipo *</label>
           <select id="n-type">
             <option value="income">Parcella / Entrata</option>
             <option value="expense">Spesa / Uscita</option>
           </select>
         </div>
-        <div class="form-group">abel>Data *</label><input type="date" id="n-date"/></div>
-        <div class="form-group">abel>Cliente</label>
+        <div class="form-group">
+          abel>Data *</label>
+          <input type="date" id="n-date"/>
+        </div>
+        <div class="form-group">
+          abel>Cliente</label>
           <select id="n-client"><option value="">-- Nessun cliente --</option></select>
         </div>
-        <div class="form-group">abel>Oggetto *</label><input type="text" id="n-subject" placeholder="Es. Consulenza portafoglio ETF"/></div>
-        <div class="form-group">abel>Categoria *</label>
+        <div class="form-group">
+          abel>Oggetto *</label>
+          <input type="text" id="n-subject" placeholder="Es. Consulenza portafoglio ETF"/>
+        </div>
+        <div class="form-group">
+          abel>Categoria *</label>
           <select id="n-category">
             <option value="Consulenza">Consulenza</option>
             <option value="Parcella">Parcella</option>
@@ -200,34 +264,63 @@ canvas{max-height:260px}
             <option value="Altro">Altro</option>
           </select>
         </div>
-        <div class="form-group">abel>Importo (€) *</label><input type="number" id="n-amount" step="0.01" placeholder="0.00"/></div>
-        <div class="form-group">abel>Stato *</label>
+        <div class="form-group">
+          abel>Importo (€) *</label>
+          <input type="number" id="n-amount" step="0.01" placeholder="0.00"/>
+        </div>
+        <div class="form-group">
+          abel>Scadenza pagamento</label>
+          <input type="date" id="n-scadenza"/>
+        </div>
+        <div class="form-group">
+          abel>Stato *</label>
           <select id="n-status">
             <option value="paid">Pagato</option>
             <option value="pending">In attesa</option>
             <option value="draft">Bozza</option>
           </select>
         </div>
-        <div class="form-group">abel>Descrizione</label><textarea id="n-desc" rows="3"></textarea></div>
+        <div class="form-group">
+          abel>Descrizione</label>
+          <textarea id="n-desc" rows="3"></textarea>
+        </div>
         <button class="btn btn-primary" onclick="saveMovimento()">Salva movimento</button>
       </div>
     </div>
+
+    <!-- SCADENZIARIO -->
+    <div class="page" id="page-scadenziario">
+      <div class="page-header"><h2>📅 Scadenziario</h2><p>Parcelle in scadenza o non pagate</p></div>
+      <div class="card"><div id="table-scadenziario"></div></div>
+    </div>
+
+    <!-- STATISTICHE -->
+    <div class="page" id="page-statistiche">
+      <div class="page-header"><h2>📊 Statistiche per Cliente</h2></div>
+      <div class="card"><div id="table-statistiche"></div></div>
+    </div>
+
+    <!-- REPORT -->
     <div class="page" id="page-report">
       <div class="page-header"><h2>Report Annuale</h2></div>
-      <div class="filters"><select id="report-anno" onchange="renderReport()"></select></div>
+      <div class="filters">
+        <select id="report-anno" onchange="renderReport()"></select>
+        <button class="btn-sm" onclick="stampaPDF()">🖨️ Stampa PDF</button>
+      </div>
       <div class="kpi-grid" id="report-kpi"></div>
       <div class="card"><h3>Riepilogo mensile</h3><div id="report-table"></div></div>
     </div>
+
   </div>
 </div>
 
-<!-- MODAL DETTAGLIO CLIENTE -->
+<!-- MODAL CLIENTE -->
 <div class="modal-overlay" id="modal-cliente">
   <div class="modal">
     <h3>👤 Dettaglio Cliente</h3>
     <div id="modal-cliente-content"></div>
     <div class="modal-footer">
-      <button class="btn-danger" onclick="closeModal()">Chiudi</button>
+      <button class="btn-danger" onclick="closeModal('modal-cliente')">Chiudi</button>
     </div>
   </div>
 </div>
@@ -273,6 +366,7 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     document.getElementById('dash-anno').textContent=new Date().getFullYear();
     await loadAll();
     renderDashboard();
+    checkScadenze();
   }
 });
 async function loadAll(){
@@ -307,6 +401,25 @@ function showPage(name,el){
   if(name==='movimenti')renderMovimenti();
   if(name==='report')renderReport();
   if(name==='dashboard')renderDashboard();
+  if(name==='scadenziario')renderScadenziario();
+  if(name==='statistiche')renderStatistiche();
+}
+function checkScadenze(){
+  const oggi=new Date();
+  const tra7=new Date();tra7.setDate(oggi.getDate()+7);
+  const scadute=allMovimenti.filter(m=>m.type==='income'&&m.status==='pending'&&m.scadenza&&new Date(m.scadenza)<oggi);
+  const inScadenza=allMovimenti.filter(m=>m.type==='income'&&m.status==='pending'&&m.scadenza&&new Date(m.scadenza)>=oggi&&new Date(m.scadenza)<=tra7);
+  const bar=document.getElementById('notifica-scadenze');
+  if(scadute.length>0||inScadenza.length>0){
+    bar.classList.add('active');
+    let msg='⚠️ ';
+    if(scadute.length>0)msg+=`${scadute.length} parcella/e SCADUTA/E. `;
+    if(inScadenza.length>0)msg+=`${inScadenza.length} parcella/e in scadenza entro 7 giorni.`;
+    msg+=' → Vai a Scadenziario';
+    bar.textContent=msg;
+    bar.style.cursor='pointer';
+    bar.onclick=()=>showPage('scadenziario',document.querySelector('[onclick*="scadenziario"]'));
+  }
 }
 function renderDashboard(){
   const anno=new Date().getFullYear();
@@ -323,7 +436,8 @@ function renderDashboard(){
     <div class="kpi-card"><div class="kpi-label">Utile netto</div><div class="kpi-value">€${fmt(entrate-spese)}</div><div class="kpi-sub">Entrate - Spese</div></div>
     <div class="kpi-card"><div class="kpi-label">Clienti attivi</div><div class="kpi-value">${allClienti.length}</div><div class="kpi-sub">In anagrafica</div></div>`;
   const mesi=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-  const entrateM=Array(12).fill(0),speseM=Array(12).fill(0);
+  const entrateM=Array(12).fill
+  (0),speseM=Array(12).fill(0);
   mov.forEach(m=>{
     const idx=parseInt(m.date.substring(5,7))-1;
     if(m.type==='income')entrateM[idx]+=parseFloat(m.amount);
@@ -340,7 +454,7 @@ function renderDashboard(){
   if(chartCategorie)chartCategorie.destroy();
   chartCategorie=new Chart(document.getElementById('chart-categorie'),{
     type:'doughnut',
-    data:{labels:Object.keys(catMap),datasets:[{data:Object.values(catMap),backgroundColor:['#2b6cb0','#38a169','#dd6b20','#e53e3e','#805ad5','#d69e2e','#319795']}]},
+    data:{labels:Object.keys(catMap).length?Object.keys(catMap):['Nessuna spesa'],datasets:[{data:Object.values(catMap).length?Object.values(catMap):[1],backgroundColor:['#2b6cb0','#38a169','#dd6b20','#e53e3e','#805ad5','#d69e2e','#319795']}]},
     options:{responsive:true,plugins:{legend:{position:'bottom'}}}
   });
   const recenti=allMovimenti.slice(0,10);
@@ -361,8 +475,7 @@ function renderClienti(){
     <table><thead><tr><th>Nome</th><th>Email</th><th>Telefono</th><th>C.F. / P.IVA</th><th>Città</th><th></th></tr></thead>
     <tbody>${lista.map(c=>`<tr>
       <td><strong>${c.name}</strong></td>
-      <td>${c.email||'-'}</td>
-      <td>${c.phone||'-'}</td>
+      <td>${c.email||'-'}</td><td>${c.phone||'-'}</td>
       <td>${c.fiscal_code||''} ${c.vat_number?'/ '+c.vat_number:''}</td>
       <td>${c.city||'-'} ${c.province?'('+c.province+')':''}</td>
       <td>
@@ -376,32 +489,35 @@ function viewCliente(id){
   if(!c)return;
   const movCliente=allMovimenti.filter(m=>m.client_id===id);
   const totale=movCliente.filter(m=>m.type==='income').reduce((s,m)=>s+parseFloat(m.amount),0);
+  const incassato=movCliente.filter(m=>m.type==='income'&&m.status==='paid').reduce((s,m)=>s+parseFloat(m.amount),0);
   document.getElementById('modal-cliente-content').innerHTML=`
     <div class="grid-2" style="margin-bottom:16px">
-      <div><div class="kpi-label">Nome</div><div style="font-weight:700;margin-top:4
-      px">${c.name}</div></div>
+      <div><div class="kpi-label">Nome</div><div style="font-weight:700;margin-top:4px">${c.name}</div></div>
       <div><div class="kpi-label">Email</div><div style="margin-top:4px">${c.email||'-'}</div></div>
       <div><div class="kpi-label">Telefono</div><div style="margin-top:4px">${c.phone||'-'}</div></div>
       <div><div class="kpi-label">Codice Fiscale</div><div style="margin-top:4px">${c.fiscal_code||'-'}</div></div>
       <div><div class="kpi-label">Partita IVA</div><div style="margin-top:4px">${c.vat_number||'-'}</div></div>
       <div><div class="kpi-label">Indirizzo</div><div style="margin-top:4px">${c.address||'-'} ${c.city?'- '+c.city:''} ${c.province?'('+c.province+')':''} ${c.zip||''}</div></div>
     </div>
-    <div class="kpi-card green" style="margin-bottom:16px">
-      <div class="kpi-label">Totale fatturato a questo cliente</div>
-      <div class="kpi-value">€${fmt(totale)}</div>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="kpi-card green"><div class="kpi-label">Totale fatturato</div><div class="kpi-value">€${fmt(totale)}</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Incassato</div><div class="kpi-value">€${fmt(incassato)}</div></div>
     </div>
-    ${c.notes?`<div><div class="kpi-label">Note</div><div style="margin-top:4px;font-size:14px">${c.notes}</div></div>`:''}`;
+    ${c.notes?`<div><div class="kpi-label">Note</div><div style="margin-top:4px;font-size:14px">${c.notes}</div></div>`:''}
+    <div style="margin-top:16px"><div class="kpi-label">Ultimi movimenti</div>
+    ${movCliente.slice(0,5).map(m=>`<div style="padding:8px 0;border-bottom:1px solid #f0f4f8;font-size:13px">
+      <span>${m.date}</span> — <strong>${m.subject}</strong> — €${fmt(m.amount)}
+      <span class="badge ${badgeStatus(m.status)}" style="margin-left:8px">${labelStatus(m.status)}</span>
+    </div>`).join('')||'<div style="color:#a0aec0;padding:8px 0">Nessun movimento</div>'}
+    </div>`;
   document.getElementById('modal-cliente').classList.add('active');
 }
-function closeModal(){
-  document.getElementById('modal-cliente').classList.remove('active');
-}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
 async function saveCliente(){
   const name=document.getElementById('c-name').value.trim();
   if(!name){showMsg('msg-cliente','Nome obbligatorio',true);return;}
   const{error}=await sb.from('clients').insert({
-    user_id:currentUser.id,
-    name,
+    user_id:currentUser.id,name,
     email:document.getElementById('c-email').value,
     phone:document.getElementById('c-phone').value,
     fiscal_code:document.getElementById('c-fiscal').value.toUpperCase(),
@@ -431,12 +547,13 @@ function renderMovimenti(){
     return matchQ&&(ft?m.type===ft:true)&&(fs?m.status===fs:true);
   });
   document.getElementById('table-movimenti').innerHTML=lista.length?`
-    <table><thead><tr><th>Data</th><th>Tipo</th><th>Oggetto</th><th>Categoria</th><th>Cliente</th><th>Importo</th><th>Stato</th><th></th></tr></thead>
+    <table><thead><tr><th>Data</th><th>Tipo</th><th>Oggetto</th><th>Categoria</th><th>Cliente</th><th>Importo</th><th>Scadenza</th><th>Stato</th><th></th></tr></thead>
     <tbody>${lista.map(m=>`<tr>
       <td>${m.date}</td>
       <td><span class="badge ${m.type==='income'?'badge-green':'badge-red'}">${m.type==='income'?'Parcella':'Spesa'}</span></td>
       <td>${m.subject}</td><td>${m.category}</td><td>${m.clients?m.clients.name:'-'}</td>
       <td><strong>€${fmt(m.amount)}</strong></td>
+      <td>${m.scadenza||'-'}</td>
       <td><span class="badge ${badgeStatus(m.status)}">${labelStatus(m.status)}</span></td>
       <td><button class="btn-danger" onclick="deleteMovimento('${m.id}')">Elimina</button></td>
     </tr>`).join('')}</tbody></table>`:'<div class="empty-state"><span>📋</span>Nessun movimento trovato</div>';
@@ -449,11 +566,10 @@ async function saveMovimento(){
   const{error}=await sb.from('records').insert({
     user_id:currentUser.id,
     type:document.getElementById('n-type').value,
-    date,
-    client_id:document.getElementById('n-client').value||null,
-    subject,
-    category:document.getElementById('n-category').value,
+    date,client_id:document.getElementById('n-client').value||null,
+    subject,category:document.getElementById('n-category').value,
     amount:parseFloat(amount),
+    scadenza:document.getElementById('n-scadenza').value||null,
     status:document.getElementById('n-status').value,
     description:document.getElementById('n-desc').value
   });
@@ -462,13 +578,58 @@ async function saveMovimento(){
   document.getElementById('n-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('n-subject').value='';
   document.getElementById('n-amount').value='';
+  document.getElementById('n-scadenza').value='';
   document.getElementById('n-desc').value='';
-  await loadAll();renderDashboard();
+  await loadAll();renderDashboard();checkScadenze();
 }
 async function deleteMovimento(id){
   if(!confirm('Eliminare questo movimento?'))return;
   await sb.from('records').delete().eq('id',id);
   await loadAll();renderMovimenti();renderDashboard();
+}
+function renderScadenziario(){
+  const oggi=new Date();
+  const tra7=new Date();tra7.setDate(oggi.getDate()+7);
+  const lista=allMovimenti.filter(m=>m.type==='income'&&m.status==='pending').sort((a,b)=>new Date(a.scadenza||a.date)-new Date(b.scadenza||b.date));
+  document.getElementById('table-scadenziario').innerHTML=lista.length?`
+    <table><thead><tr><th>Data</th><th>Oggetto</th><th>Cliente</th><th>Importo</th><th>Scadenza</th><th>Stato</th><th></th></tr></thead>
+    <tbody>${lista.map(m=>{
+      const scad=m.scadenza?new Date(m.scadenza):null;
+      const scaduta=scad&&scad<oggi;
+      const inScad=scad&&scad>=oggi&&scad<=tra7;
+      const rowClass=scaduta?'scadenza-row-red':inScad?'scadenza-row-orange':'';
+      return`<tr class="${rowClass}">
+        <td>${m.date}</td><td>${m.subject}</td>
+        <td>${m.clients?m.clients.name:'-'}</td>
+        <td><strong>€${fmt(m.amount)}</strong></td>
+        <td>${m.scadenza?m.scadenza:'<span style="color:#a0aec0">Non impostata</span>'}</td>
+        <td><span class="badge ${scaduta?'badge-red':inScad?'badge-orange':'badge-yellow'}">${scaduta?'SCADUTA':inScad?'IN SCADENZA':'In attesa'}</span></td>
+        <td><button class="btn-green" onclick="segnaComePagato('${m.id}')">✓ Pagato</button></td>
+      </tr>`;
+    }).join('')}</tbody></table>`:'<div class="empty-state"><span>✅</span>Nessuna parcella in attesa!</div>';
+}
+async function segnaComePagato(id){
+  await sb.from('records').update({status:'paid'}).eq('id',id);
+  await loadAll();renderScadenziario();renderDashboard();checkScadenze();
+}
+function renderStatistiche(){
+  const stats=allClienti.map(c=>{
+    const mov=allMovimenti.filter(m=>m.client_id===c.id&&m.type==='income');
+    const totale=mov.reduce((s,m)=>s+parseFloat(m.amount),0);
+    const incassato=mov.filter(m=>m.status==='paid').reduce((s,m)=>s+parseFloat(m.amount),0);
+    const nparcelle=mov.length;
+    return{...c
+           ,totale,incassato,nparcelle};
+  }).sort((a,b)=>b.totale-a.totale);
+  document.getElementById('table-statistiche').innerHTML=stats.length?`
+    <table><thead><tr><th>Cliente</th><th>Parcelle</th><th>Totale fatturato</th><th>Incassato</th><th>Da incassare</th></tr></thead>
+    <tbody>${stats.map(c=>`<tr>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.nparcelle}</td>
+      <td>€${fmt(c.totale)}</td>
+      <td>€${fmt(c.incassato)}</td>
+      <td>€${fmt(c.totale-c.incassato)}</td>
+    </tr>`).join('')}</tbody></table>`:'<div class="empty-state"><span>📊</span>Nessun dato disponibile</div>';
 }
 function renderReport(){
   const anno=document.getElementById('report-anno').value;
@@ -493,9 +654,46 @@ function renderReport(){
     <table><thead><tr><th>Mese</th><th>Entrate</th><th>Spese</th><th>Utile</th></tr></thead>
     <tbody>${righe}</tbody></table>`;
 }
+function stampaPDF(){
+  const anno=document.getElementById('report-anno').value;
+  const mov=allMovimenti.filter(m=>m.date.startsWith(anno));
+  const entrate=mov.filter(m=>m.type==='income').reduce((s,m)=>s+parseFloat(m.amount),0);
+  const spese=mov.filter(m=>m.type==='expense').reduce((s,m)=>s+parseFloat(m.amount),0);
+  const incassato=mov.filter(m=>m.type==='income'&&m.status==='paid').reduce((s,m)=>s+parseFloat(m.amount),0);
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  doc.setFontSize(18);doc.setTextColor(26,54,93);
+  doc.text('Studio Lentini — Report Annuale '+anno,14,20);
+  doc.setFontSize(11);doc.setTextColor(100);
+  doc.text('Generato il '+new Date().toLocaleDateString('it-IT'),14,28);
+  doc.setFontSize(12);doc.setTextColor(0);
+  doc.text('Fatturato: €'+fmt(entrate),14,42);
+  doc.text('Incassato: €'+fmt(incassato),14,50);
+  doc.text('Spese: €'+fmt(spese),14,58);
+  doc.text('Utile netto: €'+fmt(entrate-spese),14,66);
+  doc.setFontSize(13);doc.setTextColor(26,54,93);
+  doc.text('Riepilogo mensile',14,80);
+  const mesi=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  let y=90;
+  doc.setFontSize(10);doc.setTextColor(100);
+  doc.text('Mese',14,y);doc.text('Entrate',70,y);doc.text('Spese',110,y);doc.text('Utile',150,y);
+  y+=6;doc.setTextColor(0);
+  mesi.forEach((m,i)=>{
+    const idx=String(i+1).padStart(2,'0');
+    const me=mov.filter(x=>x.date.startsWith(anno+'-'+idx));
+    const e=me.filter(x=>x.type==='income').reduce((s,x)=>s+parseFloat(x.amount),0);
+    const s=me.filter(x=>x.type==='expense').reduce((s,x)=>s+parseFloat(x.amount),0);
+    doc.text(m,14,y);
+    doc.text('€'+fmt(e),70,y);
+    doc.text('€'+fmt(s),110,y);
+    doc.text('€'+fmt(e-s),150,y);
+    y+=8;
+  });
+  doc.save('report-studio-lentini-'+anno+'.pdf');
+}
 function exportCSV(){
-  const rows=[['Data','Tipo','Oggetto','Categoria','Cliente','Importo','Stato','Descrizione']];
-  allMovimenti.forEach(m=>{rows.push([m.date,m.type==='income'?'Parcella':'Spesa',m.subject,m.category,m.clients?m.clients.name:'',m.amount,labelStatus(m.status),m.description||'']);});
+  const rows=[['Data','Tipo','Oggetto','Categoria','Cliente','Importo','Scadenza','Stato','Descrizione']];
+  allMovimenti.forEach(m=>{rows.push([m.date,m.type==='income'?'Parcella':'Spesa',m.subject,m.category,m.clients?m.clients.name:'',m.amount,m.scadenza||'',labelStatus(m.status),m.description||'']);});
   const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
