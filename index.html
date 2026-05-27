@@ -169,36 +169,36 @@ canvas{max-height:260px}
             <input type="text" id="c-phone"/>
           </div>
           <div class="form-group">
-                        abel>Codice Fiscale</label>
+                        label >Codice Fiscale</llabel >
             <input type="text" id="c-fiscal" style="text-transform:uppercase"/>
           </div>
         </div>
         <div class="form-group">
-          abel>Partita IVA</label>
+          label >Partita IVA</llabel >
           <input type="text" id="c-vat"/>
         </div>
         <div class="section-divider">Indirizzo</div>
         <div class="form-group">
-          abel>Indirizzo</label>
+          label >Indirizzo</llabel >
           <input type="text" id="c-address" placeholder="Via, numero civico"/>
         </div>
         <div class="grid-3">
           <div class="form-group">
-            abel>Città</label>
+            label >Città</llabel >
             <input type="text" id="c-city"/>
           </div>
           <div class="form-group">
-            abel>CAP</label>
+            label >CAP</llabel >
             <input type="text" id="c-zip"/>
           </div>
           <div class="form-group">
-            abel>Provincia</label>
+            label >Provincia</llabel >
             <input type="text" id="c-province" maxlength="2" style="text-transform:uppercase"/>
           </div>
         </div>
         <div class="section-divider">Note</div>
         <div class="form-group">
-          abel>Note</label>
+          label >Note</llabel >
           <textarea id="c-notes" rows="3"></textarea>
         </div>
         <button class="btn btn-primary" onclick="saveCliente()">Salva cliente</button>
@@ -232,26 +232,26 @@ canvas{max-height:260px}
       <div class="card" style="max-width:560px">
         <div id="msg-nuovo"></div>
         <div class="form-group">
-          abel>Tipo *</label>
+          label >Tipo *</llabel >
           <select id="n-type">
             <option value="income">Parcella / Entrata</option>
             <option value="expense">Spesa / Uscita</option>
           </select>
         </div>
         <div class="form-group">
-          abel>Data *</label>
+          label >Data *</llabel >
           <input type="date" id="n-date"/>
         </div>
         <div class="form-group">
-          abel>Cliente</label>
+          label >Cliente</llabel >
           <select id="n-client"><option value="">-- Nessun cliente --</option></select>
         </div>
         <div class="form-group">
-          abel>Oggetto *</label>
+          label >Oggetto *</llabel >
           <input type="text" id="n-subject" placeholder="Es. Consulenza portafoglio ETF"/>
         </div>
         <div class="form-group">
-          abel>Categoria *</label>
+          label >Categoria *</llabel >
           <select id="n-category">
             <option value="Consulenza">Consulenza</option>
             <option value="Parcella">Parcella</option>
@@ -265,15 +265,15 @@ canvas{max-height:260px}
           </select>
         </div>
         <div class="form-group">
-          abel>Importo (€) *</label>
+          label >Importo (€) *</llabel >
           <input type="number" id="n-amount" step="0.01" placeholder="0.00"/>
         </div>
         <div class="form-group">
-          abel>Scadenza pagamento</label>
+          label >Scadenza pagamento</llabel >
           <input type="date" id="n-scadenza"/>
         </div>
         <div class="form-group">
-          abel>Stato *</label>
+          label >Stato *</llabel >
           <select id="n-status">
             <option value="paid">Pagato</option>
             <option value="pending">In attesa</option>
@@ -281,7 +281,7 @@ canvas{max-height:260px}
           </select>
         </div>
         <div class="form-group">
-          abel>Descrizione</label>
+          label >Descrizione</llabel >
           <textarea id="n-desc" rows="3"></textarea>
         </div>
         <button class="btn btn-primary" onclick="saveMovimento()">Salva movimento</button>
@@ -429,7 +429,7 @@ function renderDashboard(){
   const incassato=mov.filter(m=>m.type==='income'&&m.status==='paid').reduce((s,m)=>s+parseFloat(m.amount),0);
   const daIncassare=mov.filter(m=>m.type==='income'&&m.status==='pending').reduce((s,m)=>s+parseFloat(m.amount),0);
   document.getElementById('kpi-grid').innerHTML=`
-    <div class="kpi-card green"><div class="kpi-label">Fatturato ${anno}</div><div class="kpi-value">€${fmt(entrate)}</div><div class="kpi-sub">Totale parcelle</div></div>
+    <div class="kpi-card green"><div class="kpi-llabel ">Fatturato ${anno}</div><div class="kpi-value">€${fmt(entrate)}</div><div class="kpi-sub">Totale parcelle</div></div>
     <div class="kpi-card green"><div class="kpi-label">Incassato</div><div class="kpi-value">€${fmt(incassato)}</div><div class="kpi-sub">Pagamenti ricevuti</div></div>
     <div class="kpi-card orange"><div class="kpi-label">Da incassare</div><div class="kpi-value">€${fmt(daIncassare)}</div><div class="kpi-sub">In attesa</div></div>
     <div class="kpi-card red"><div class="kpi-label">Spese</div><div class="kpi-value">€${fmt(spese)}</div><div class="kpi-sub">Totale uscite</div></div>
