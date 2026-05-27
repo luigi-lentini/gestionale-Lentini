@@ -1,3 +1,6 @@
+Perfetto! Incolla questa **PARTE 1**:
+
+```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -22,8 +25,9 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
 .btn-secondary{background:#e2e8f0;color:#4a5568}
 .btn-danger{background:#e53e3e;color:white;padding:6px 12px;width:auto;font-size:13px;border-radius:6px;border:none;cursor:pointer}
 .btn-sm{padding:6px 14px;width:auto;font-size:13px;border:none;border-radius:6px;cursor:pointer;background:#2b6cb0;color:white}
+.btn-warning{background:#dd6b20;color:white;padding:6px 12px;width:auto;font-size:13px;border-radius:6px;border:none;cursor:pointer;margin-right:4px}
 #app{display:none}
-.sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:#1a365d;color:white;padding:24px 0;z-index:100}
+.sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:#1a365d;color:white;padding:24px 0;z-index:100;overflow-y:auto}
 .sidebar-logo{padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,0.1);font-size:16px;font-weight:700}
 .sidebar-logo span{display:block;font-size:11px;color:#90cdf4;margin-top:2px}
 .nav-item{padding:12px 24px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:10px;border-left:3px solid transparent}
@@ -47,6 +51,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c}
 .card{background:white;border-radius:12px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:20px}
 .card h3{font-size:16px;font-weight:700;color:#1a365d;margin-bottom:16px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 table{width:100%;border-collapse:collapse;font-size:14px}
 thead th{background:#f7fafc;padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:#718096;text-transform:uppercase;border-bottom:1px solid #e2e8f0}
 tbody tr{border-bottom:1px solid #f0f4f8}
@@ -57,6 +62,7 @@ tbody td{padding:10px 12px}
 .badge-yellow{background:#fefcbf;color:#744210}
 .badge-gray{background:#e2e8f0;color:#4a5568}
 .badge-red{background:#fed7d7;color:#742a2a}
+.badge-blue{background:#bee3f8;color:#1a365d}
 .filters{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .filters input,.filters select{padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;background:white}
 .msg{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px}
@@ -67,6 +73,13 @@ tbody td{padding:10px 12px}
 .logout-btn{padding:6px 14px;background:#e2e8f0;border:none;border-radius:6px;font-size:13px;cursor:pointer}
 canvas{max-height:260px}
 .empty-state{text-align:center;padding:40px;color:#a0aec0}
+.empty-state span{font-size:40px;display:block;margin-bottom:8px}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:white;border-radius:16px;padding:32px;width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.modal h3{font-size:18px;font-weight:700;color:#1a365d;margin-bottom:20px}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.section-divider{font-size:11px;font-weight:700;color:#90cdf4;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #e2e8f0}
 </style>
 </head>
 <body>
@@ -114,12 +127,27 @@ canvas{max-height:260px}
       <div class="card"><div id="table-clienti"></div></div>
     </div>
     <div class="page" id="page-nuovo-cliente">
-      <div class="page-header"><h2>Nuovo Cliente</h2></div>
-      <div class="card" style="max-width:520px">
+      <div class="page-header"><h2>Nuovo Cliente</h2><p>Anagrafica completa</p></div>
+      <div class="card" style="max-width:600px">
         <div id="msg-cliente"></div>
-        <div class="form-group">abel>Nome e Cognome *</label><input type="text" id="c-name"/></div>
-        <div class="form-group">abel>Email</label><input type="email" id="c-email"/></div>
-        <div class="form-group">abel>Telefono</label><input type="text" id="c-phone"/></div>
+        <div class="section-divider">Dati anagrafici</div>
+        <div class="grid-2">
+          <div class="form-group">abel>Nome e Cognome *</label><input type="text" id="c-name"/></div>
+          <div class="form-group">abel>Email</label><input type="email" id="c-email"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">abel>Telefono</label><input type="text" id="c-phone"/></div>
+          <div class="form-group">abel>Codice Fiscale</label><input type="text" id="c-fiscal" style="text-transform:uppercase"/></div>
+        </div>
+        <div class="form-group">abel>Partita IVA</label><input type="text" id="c-vat"/></div>
+        <div class="section-divider">Indirizzo</div>
+        <div class="form-group">abel>Indirizzo</label><input type="text" id="c-address" placeholder="Via, numero civico"/></div>
+        <div class="grid-3">
+          <div class="form-group">abel>Città</label><input type="text" id="c-city"/></div>
+          <div class="form-group">abel>CAP</label><input type="text" id="c-zip"/></div>
+          <div class="form-group">abel>Provincia</label><input type="text" id="c-province" maxlength="2" style="text-transform:uppercase"/></div>
+        </div>
+        <div class="section-divider">Note</div>
         <div class="form-group">abel>Note</label><textarea id="c-notes" rows="3"></textarea></div>
         <button class="btn btn-primary" onclick="saveCliente()">Salva cliente</button>
       </div>
@@ -130,7 +158,8 @@ canvas{max-height:260px}
         <input type="text" id="search-mov" placeholder="Cerca..." oninput="renderMovimenti()"/>
         <select id="filter-type" onchange="renderMovimenti()">
           <option value="">Tutti i tipi</option>
-          <option value="income">Parcelle</option>
+          <option value
+            ="income">Parcelle</option>
           <option value="expense">Spese</option>
         </select>
         <select id="filter-status" onchange="renderMovimenti()">
@@ -178,8 +207,7 @@ canvas{max-height:260px}
             <option value="pending">In attesa</option>
             <option value="draft">Bozza</option>
           </select>
-        </div
-  >
+        </div>
         <div class="form-group">abel>Descrizione</label><textarea id="n-desc" rows="3"></textarea></div>
         <button class="btn btn-primary" onclick="saveMovimento()">Salva movimento</button>
       </div>
@@ -192,23 +220,36 @@ canvas{max-height:260px}
     </div>
   </div>
 </div>
+
+<!-- MODAL DETTAGLIO CLIENTE -->
+<div class="modal-overlay" id="modal-cliente">
+  <div class="modal">
+    <h3>👤 Dettaglio Cliente</h3>
+    <div id="modal-cliente-content"></div>
+    <div class="modal-footer">
+      <button class="btn-danger" onclick="closeModal()">Chiudi</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const SUPABASE_URL = 'https://kyiywhyxwbgzzjkgbmwo.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Q4VqgzGlf2mBIT2lHOY8BA_5aI-kWw_';
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL='https://kyiywhyxwbgzzjkgbmwo.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_Q4VqgzGlf2mBIT2lHOY8BA_5aI-kWw_';
+const{createClient}=supabase;
+const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 let currentUser=null,allClienti=[],allMovimenti=[],chartMensile=null,chartCategorie=null;
+
 async function doLogin(){
   const email=document.getElementById('login-email').value;
   const pass=document.getElementById('login-pass').value;
-  const {error}=await sb.auth.signInWithPassword({email,password:pass});
+  const{error}=await sb.auth.signInWithPassword({email,password:pass});
   if(error)showLoginMsg(error.message,true);
 }
 async function doRegister(){
   const email=document.getElementById('login-email').value;
   const pass=document.getElementById('login-pass').value;
   if(pass.length<6){showLoginMsg('Password minimo 6 caratteri',true);return;}
-  const {error}=await sb.auth.signUp({email,password:pass});
+  const{error}=await sb.auth.signUp({email,password:pass});
   if(error)showLoginMsg(error.message,true);
   else showLoginMsg('Account creato! Controlla email per conferma.',false);
 }
@@ -235,9 +276,9 @@ sb.auth.onAuthStateChange(async(event,session)=>{
   }
 });
 async function loadAll(){
-  const {data:cl}=await sb.from('clients').select('*').order('name');
+  const{data:cl}=await sb.from('clients').select('*').order('name');
   allClienti=cl||[];
-  const {data:mo}=await sb.from('records').select('*,clients(name)').order('date',{ascending:false});
+  const{data:mo}=await sb.from('records').select('*,clients(name)').order('date',{ascending:false});
   allMovimenti=mo||[];
   populateClientSelect();
   populateReportAnni();
@@ -315,21 +356,65 @@ function renderDashboard(){
 }
 function renderClienti(){
   const q=document.getElementById('search-clienti').value.toLowerCase();
-  const lista=allClienti.filter(c=>c.name.toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q));
+  const lista=allClienti.filter(c=>c.name.toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q)||(c.fiscal_code||'').toLowerCase().includes(q));
   document.getElementById('table-clienti').innerHTML=lista.length?`
-    <table><thead><tr><th>Nome</th><th>Email</th><th>Telefono</th><th>Note</th><th></th></tr></thead>
-    <tbody>${lista.map(c=>`<tr><td><strong>${c.name}</strong></td><td>${c.email||'-'}</td><td>${c.phone||'-'}</td><td>${c.notes||'-'}</td>
-    <td><button class="btn-danger" onclick="deleteCliente('${c.id}')">Elimina</button></td></tr>`).join('')}</tbody></table>`:
-    '<div class="empty-state"><span>👥</span>Nessun cliente trovato</div>';
+    <table><thead><tr><th>Nome</th><th>Email</th><th>Telefono</th><th>C.F. / P.IVA</th><th>Città</th><th></th></tr></thead>
+    <tbody>${lista.map(c=>`<tr>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.email||'-'}</td>
+      <td>${c.phone||'-'}</td>
+      <td>${c.fiscal_code||''} ${c.vat_number?'/ '+c.vat_number:''}</td>
+      <td>${c.city||'-'} ${c.province?'('+c.province+')':''}</td>
+      <td>
+        <button class="btn-warning" onclick="viewCliente('${c.id}')">Dettaglio</button>
+        <button class="btn-danger" onclick="deleteCliente('${c.id}')">Elimina</button>
+      </td>
+    </tr>`).join('')}</tbody></table>`:'<div class="empty-state"><span>👥</span>Nessun cliente trovato</div>';
+}
+function viewCliente(id){
+  const c=allClienti.find(x=>x.id===id);
+  if(!c)return;
+  const movCliente=allMovimenti.filter(m=>m.client_id===id);
+  const totale=movCliente.filter(m=>m.type==='income').reduce((s,m)=>s+parseFloat(m.amount),0);
+  document.getElementById('modal-cliente-content').innerHTML=`
+    <div class="grid-2" style="margin-bottom:16px">
+      <div><div class="kpi-label">Nome</div><div style="font-weight:700;margin-top:4
+      px">${c.name}</div></div>
+      <div><div class="kpi-label">Email</div><div style="margin-top:4px">${c.email||'-'}</div></div>
+      <div><div class="kpi-label">Telefono</div><div style="margin-top:4px">${c.phone||'-'}</div></div>
+      <div><div class="kpi-label">Codice Fiscale</div><div style="margin-top:4px">${c.fiscal_code||'-'}</div></div>
+      <div><div class="kpi-label">Partita IVA</div><div style="margin-top:4px">${c.vat_number||'-'}</div></div>
+      <div><div class="kpi-label">Indirizzo</div><div style="margin-top:4px">${c.address||'-'} ${c.city?'- '+c.city:''} ${c.province?'('+c.province+')':''} ${c.zip||''}</div></div>
+    </div>
+    <div class="kpi-card green" style="margin-bottom:16px">
+      <div class="kpi-label">Totale fatturato a questo cliente</div>
+      <div class="kpi-value">€${fmt(totale)}</div>
+    </div>
+    ${c.notes?`<div><div class="kpi-label">Note</div><div style="margin-top:4px;font-size:14px">${c.notes}</div></div>`:''}`;
+  document.getElementById('modal-cliente').classList.add('active');
+}
+function closeModal(){
+  document.getElementById('modal-cliente').classList.remove('active');
 }
 async function saveCliente(){
   const name=document.getElementById('c-name').value.trim();
   if(!name){showMsg('msg-cliente','Nome obbligatorio',true);return;}
-  const{error}=await sb.from('clients').insert({user_id:currentUser.id,name,email:document.getElementById('c-email').value,phone:document.getElementById('c-phone').value,notes:document.getElementById('c-notes').value});
+  const{error}=await sb.from('clients').insert({
+    user_id:currentUser.id,
+    name,
+    email:document.getElementById('c-email').value,
+    phone:document.getElementById('c-phone').value,
+    fiscal_code:document.getElementById('c-fiscal').value.toUpperCase(),
+    vat_number:document.getElementById('c-vat').value,
+    address:document.getElementById('c-address').value,
+    city:document.getElementById('c-city').value,
+    zip:document.getElementById('c-zip').value,
+    province:document.getElementById('c-province').value.toUpperCase(),
+    notes:document.getElementById('c-notes').value
+  });
   if(error){showMsg('msg-cliente',error.message,true);return;}
   showMsg('msg-cliente','Cliente salvato!',false);
-  document.getElementById('c-name').value='';document.getElementById('c-email').value='';
-  document.getElementById('c-phone').value='';document.getElementById('c-notes').value='';
+  ['c-name','c-email','c-phone','c-fiscal','c-vat','c-address','c-city','c-zip','c-province','c-notes'].forEach(id=>document.getElementById(id).value='');
   await loadAll();
 }
 async function deleteCliente(id){
@@ -354,8 +439,7 @@ function renderMovimenti(){
       <td><strong>€${fmt(m.amount)}</strong></td>
       <td><span class="badge ${badgeStatus(m.status)}">${labelStatus(m.status)}</span></td>
       <td><button class="btn-danger" onclick="deleteMovimento('${m.id}')">Elimina</button></td>
-    </tr>`).join('')}</tbody></table>`:
-    '<div class="empty-state"><span>📋</span>Nessun movimento trovato</div>';
+    </tr>`).join('')}</tbody></table>`:'<div class="empty-state"><span>📋</span>Nessun movimento trovato</div>';
 }
 async function saveMovimento(){
   const date=document.getElementById('n-date').value;
@@ -363,15 +447,21 @@ async function saveMovimento(){
   const amount=document.getElementById('n-amount').value;
   if(!date||!subject||!amount){showMsg('msg-nuovo','Compila tutti i campi obbligatori',true);return;}
   const{error}=await sb.from('records').insert({
-    user_id:currentUser.id,type:document.getElementById('n-type').value,date,
-    client_id:document.getElementById('n-client').value||null,subject,
-    category:document.getElementById('n-category').value,amount:parseFloat(amount),
-    status:document.getElementById('n-status').value,description:document.getElementById('n-desc').value
+    user_id:currentUser.id,
+    type:document.getElementById('n-type').value,
+    date,
+    client_id:document.getElementById('n-client').value||null,
+    subject,
+    category:document.getElementById('n-category').value,
+    amount:parseFloat(amount),
+    status:document.getElementById('n-status').value,
+    description:document.getElementById('n-desc').value
   });
   if(error){showMsg('msg-nuovo',error.message,true);return;}
   showMsg('msg-nuovo','Movimento salvato!',false);
   document.getElementById('n-date').value=new Date().toISOString().split('T')[0];
-  document.getElementById('n-subject').value='';document.getElementById('n-amount').value='';
+  document.getElementById('n-subject').value='';
+  document.getElementById('n-amount').value='';
   document.getElementById('n-desc').value='';
   await loadAll();renderDashboard();
 }
