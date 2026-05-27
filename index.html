@@ -428,8 +428,7 @@ function renderDashboard() {
     if (m.type === 'income') eM[idx] += parseFloat(m.amount);
     else sM[idx] += parseFloat(m.amount);
   });
-  if (chart
-      Mensile) chartMensile.destroy();
+  if (chartMensile) chartMensile.destroy();
   chartMensile = new Chart(document.getElementById('chart-mensile'), {
     type: 'bar',
     data: {labels: mesi, datasets: [{label: 'Entrate', data: eM, backgroundColor: '#38a169'}, {label: 'Spese', data: sM, backgroundColor: '#e53e3e'}]},
