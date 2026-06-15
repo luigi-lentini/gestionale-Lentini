@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() { sb.auth.getSession().
                 var email = document.querySelector('#login-screen input[type="email"]').value;
           var pass = document.querySelector('#login-screen input[type="password"]').value;
     sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
-      if (res.error) showLoginMsg(res.error.message, true);
+      if (res.error) showLoginMsg(res.error.message, true); else { currentUser = res.data.user; showApp(); }
           
 
   document.getElementById('btn-register').addEventListener('click', function() {
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() { sb.auth.getSession().
     var pass = document.getElementById('login-pass').value;
     if (pass.length < 6) { showLoginMsg('Password minimo 6 caratteri', true); return; }
     sb.auth.signUp({email: email, password: pass}).then(function(res) {
-      if (res.error) showLoginMsg(res.error.message, true);
+      if (res.error) showLoginMsg(res.error.message, true); else { currentUser = res.data.user; showApp(); }
       else showLoginMsg('Account creato! Controlla email.', false);
     });
   });
