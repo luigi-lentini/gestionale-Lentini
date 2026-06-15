@@ -276,7 +276,7 @@ function showLoginMsg(msg, isError) {
   el.className = 'msg ' + (isError ? 'msg-error' : 'msg-success');
   el.textContent = msg;
 }
-          function showApp() { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app').style.display = 'flex'; loadDashboard(); } function doLogin() {
+          function showApp() { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app').style.display = 'flex'; } function doLogin() {
     var email = document.getElementById('login-email').value;
     var pass = document.getElementById('login-pass').value;
     sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
