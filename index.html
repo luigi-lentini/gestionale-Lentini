@@ -98,12 +98,11 @@ abel>Email</label>
 abel>Password</label>
                         <input type="password" id="login-pass" placeholder="Password"/>
 </div>
-<button class="btn btn-primary" id="btn-login">Accedi</button>
-<button class="btn btn-secondary" id="btn-register">Crea account</button>
+<button class="btn btn-primary" id="btn-login" onclick="doLogin()">Accedi</button>
+            <button class="btn btn-secondary" id="btn-register">Crea account</button>
+        
 </div>
-</div>
-<div id="app">
-<div class="sidebar">
+            sidebar">
 <div class="sidebar-logo">Studio Lentini<span>Gestionale Pro</span></div>
 <div class="nav-section">Principale</div>
 <div class="nav-item active" id="nav-dashboard">Dashboard</div>
@@ -278,6 +277,14 @@ function showLoginMsg(msg, isError) {
   el.className = 'msg ' + (isError ? 'msg-error' : 'msg-success');
   el.textContent = msg;
 }
+          function doLogin() {
+    var email = document.getElementById('login-email').value;
+    var pass = document.getElementById('login-pass').value;
+    sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
+      if (res.error) { showLoginMsg(res.error.message, true); }
+      else { currentUser = res.data.user; showApp(); }
+    });
+  }
 
 document.addEventListener('DOMContentLoaded', function() {
 
