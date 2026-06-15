@@ -92,7 +92,7 @@ canvas{max-height:260px}
 <div id="login-msg"></div>
 <div class="fg">
 abel>Email</label>
-<input type="email" id="login-email" placeholder="tuaemail@esempio.it"/>
+<input type="email" id="" placeholder="tuaemail@esempio.it"/>
 </div>
 <div class="fg">
 abel>Password</label>
@@ -282,7 +282,7 @@ function showLoginMsg(msg, isError) {
 document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('btn-login').addEventListener('click', function() {
-    var email = document.getElementById('login-email').value;
+          var email = document.getElementById('login-email').value;
     var pass = document.getElementById('login-pass').value;
     sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
       if (res.error) showLoginMsg(res.error.message, true);
