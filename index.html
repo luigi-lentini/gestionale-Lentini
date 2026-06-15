@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8"/> 
+        <meta name="google" content="notranslate"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Studio Lentini</title>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -357,7 +358,7 @@ function loadAll() {
 
 function populateClientSelect() {
   var sel = document.getElementById('n-client');
-  sel.innerHTML = '<option value="">Nessun cliente</option>';
+  sel. = '<option value="">Nessun cliente</option>';
   allClienti.forEach(function(c) {
     var o = document.createElement('option');
     o.value = c.id; o.textContent = c.name; sel.appendChild(o);
@@ -374,7 +375,7 @@ function populateReportAnni() {
   var thisYear = String(new Date().getFullYear());
   if (anni.indexOf(thisYear) === -1) anni.unshift(thisYear);
   anni.sort(function(a, b) { return b - a; });
-  sel.innerHTML = anni.map(function(a) { return '<option value="' + a + '">' + a + '</option>'; }).join('');
+  sel. = anni.map(function(a) { return '<option value="' + a + '">' + a + '</option>'; }).join('');
 }
 
 function showPage(name, el) {
@@ -413,7 +414,7 @@ function renderDashboard() {
     if (m.type === 'income') { entrate += parseFloat(m.amount); if (m.status === 'paid') incassato += parseFloat(m.amount); else if (m.status === 'pending') daInc += parseFloat(m.amount); }
     else spese += parseFloat(m.amount);
   });
-  document.getElementById('kpi-grid').innerHTML =
+  document.getElementById('kpi-grid'). =
     '<div class="kpi-card green"><div class="kpi-label">Fatturato ' + anno + '</div><div class="kpi-value">EUR ' + fmt(entrate) + '</div></div>' +
     '<div class="kpi-card green"><div class="kpi-label">Incassato</div><div class="kpi-value">EUR ' + fmt(incassato) + '</div></div>' +
     '<div class="kpi-card orange"><div class="kpi-label">Da incassare</div><div class="kpi-value">EUR ' + fmt(daInc) + '</div></div>' +
@@ -455,7 +456,7 @@ function renderDashboard() {
   } else {
     html = '<div class="empty-state"><span>no</span>Nessun movimento</div>';
   }
-  document.getElementById('dash-recent').innerHTML = html;
+  document.getElementById('dash-recent'). = html;
 }
 
 function renderClienti() {
