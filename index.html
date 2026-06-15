@@ -281,7 +281,7 @@ function showLoginMsg(msg, isError) {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  document.getElementById('btn-login').addEventListener('click', function() {
+  document.querySelector('#login-screen button.btn-primary').addEventListener('click', function() {
                 var email = document.querySelector('#login-screen input[type="email"]').value;
           var pass = document.querySelector('#login-screen input[type="password"]').value;
     sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
