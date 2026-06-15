@@ -282,12 +282,11 @@ function showLoginMsg(msg, isError) {
 document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('btn-login').addEventListener('click', function() {
-          var email = document.getElementById('login-email').value;
-    var pass = document.getElementById('login-pass').value;
+                var email = document.querySelector('#login-screen input[type="email"]').value;
+          var pass = document.querySelector('#login-screen input[type="password"]').value;
     sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
       if (res.error) showLoginMsg(res.error.message, true);
-    });
-  });
+          
 
   document.getElementById('btn-register').addEventListener('click', function() {
     var email = document.getElementById('login-email').value;
