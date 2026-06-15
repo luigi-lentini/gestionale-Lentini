@@ -287,7 +287,7 @@ function showLoginMsg(msg, isError) {
 
 document.addEventListener('DOMContentLoaded', function() { sb.auth.getSession().then(function(r){if(r.data&&r.data.session){document.getElementById('login-screen').style.display='none';document.getElementById('app').style.display='block';}});
 
-  document.querySelector('#login-screen button.btn-primary').addEventListener('click', function() {
+  var _loginBtn = document.querySelector('#login-screen button.btn-primary'); if(_loginBtn) _loginBtn.addEventListener('click', function() {
                 var email = document.querySelector('#login-screen input[type="email"]').value;
           var pass = document.querySelector('#login-screen input[type="password"]').value;
     sb.auth.signInWithPassword({email: email, password: pass}).then(function(res) {
